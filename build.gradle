@@ -1,0 +1,56 @@
+plugins {
+	id 'groovy'
+	id 'java'
+	id 'application'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.codehaus.groovy:groovy-all:2.3.11'
+	//testCompile group: 'junit', name: 'junit', version: '4.12'
+	//compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+	compile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version: '3.141.59'
+	compile group: 'org.seleniumhq.selenium', name: 'selenium-firefox-driver', version: '3.141.59'
+	compile group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '3.141.59'
+
+	//compile group: 'org.gebish', name: 'geb-gradle', version: '3.4'
+	compile group: 'org.gebish', name: 'geb-core', version: '3.4'
+}
+
+application {
+	mainClassName = 'Main'
+}
+
+run {
+	System.setProperty("webdriver.gecko.driver", "<Path to your WebDriver>");
+	System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver");
+
+	systemProperties = [
+			'webdriver.chrome.driver': "src/main/resources/chromedriver",
+			'webdriver.gecko.driver' : "src/main/resources/geckodriver"
+	]
+}
+
+/*
+task runScript(dependsOn: 'classes',type: JavaExec) {
+    description 'Run Groovy script'
+
+    // Set main property to name of Groovy script class.
+    main = 'Main'
+
+    // Set classpath for running the Groovy script.
+    classpath = sourceSets.main.runtimeClasspath
+
+    if (project.hasProperty('custom')) {
+        // Pass command-line argument to script.
+        args project.getProperty('custom')
+    }
+}
+
+defaultTasks 'runScript' */
