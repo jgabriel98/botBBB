@@ -1,12 +1,11 @@
 import geb.Browser
-import geb.navigator.Navigator
 import globoBBB.EnqueteVotacaoPage
 import globoBBB.GshowHomePage
 import org.openqa.selenium.firefox.FirefoxDriver
 
 class Main {
 	static void main(String[] args) {
-		// Using a simple println statement to print output to the console
+		configuraVariaveisDeAmbiente()
 
 		Browser browser = new Browser(driver: new FirefoxDriver())
 		browser.baseUrl = 'https://gshow.globo.com/'
@@ -24,5 +23,11 @@ class Main {
 		}
 
 		browser.quit()
+	}
+
+	static void configuraVariaveisDeAmbiente() {
+		//escreve apenas se n ja for definida
+		System.setProperty( "webdriver.gecko.driver",  System.getProperty("webdriver.gecko.driver")  ?: "../resources/geckodriver"  )
+		System.setProperty( "webdriver.chrome.driver", System.getProperty("webdriver.chrome.driver") ?: "../resources/chromedriver" )
 	}
 }

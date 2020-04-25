@@ -28,12 +28,10 @@ application {
 }
 
 run {
-	System.setProperty("webdriver.gecko.driver", "<Path to your WebDriver>");
-	System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver");
 
 	systemProperties = [
-			'webdriver.chrome.driver': "src/main/resources/chromedriver",
-			'webdriver.gecko.driver' : "src/main/resources/geckodriver"
+			'webdriver.chrome.driver': "src/dist/resources/chromedriver",
+			'webdriver.gecko.driver' : "src/dist/resources/geckodriver"
 	]
 }
 
