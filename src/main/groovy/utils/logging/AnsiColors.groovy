@@ -20,13 +20,15 @@ class AnsiColors {
     static final String	REVERSE_VIDEO   = "\u001B[7m"
     static final String	INVISIBLE_TEXT  = "\u001B[8m"
 
-    static final String RESET_BOLD           = "\u001B[21m"
+    static final String RESET_BOLD           = "\u001B[21m"     //parece n ser mt suportado, melhor usar o reset normal
     static final String	RESET_ITALIC	     = "\u001B[23m"
     static final String	RESET_UNDERLINE      = "\u001B[24m"
     static final String	RESET_BLINK          = "\u001B[25m"
     static final String	RESET_RAPID_BLINK	 = "\u001B[26m"
     static final String	RESET_REVERSE_VIDEO  = "\u001B[27m"
     static final String	RESET_INVISIBLE_TEXT = "\u001B[28m"
+
+    //echo -e "Normal \e[1mBold \e[21mNormal"
 
     static final String	BLACK           = "\u001B[30m"
     static final String	RED             = "\u001B[31m"
@@ -38,18 +40,19 @@ class AnsiColors {
     static final String	WHITE           = "\u001B[37m"
     static final String	DEFAULT         = "\u001B[39m"
 
-    static final String	DARK_GRAY       = "\u001B[1;30m"
+    static final String	DARK_GRAY       = "\u001B[1;90m"
     static final String	LIGHT_RED       = "\u001B[1;31m"
     static final String	LIGHT_GREEN     = "\u001B[1;32m"
     static final String LIGHT_YELLOW    = "\u001B[1;33m"
     static final String	LIGHT_BLUE      = "\u001B[1;34m"
     static final String	LIGHT_PURPLE    = "\u001B[1;35m"
     static final String	LIGHT_CYAN      = "\u001B[1;36m"
+    static final String	LIGHT_GRAY      = "\u001B[1;37m"
 
     static String color(String text, String ansiValue) {
         String restoreAnsi
         switch (ansiValue) {
-            case BOLD:              restoreAnsi = RESET_BOLD; break
+            case BOLD:              restoreAnsi = RESET; break         //reset bold n funciona em todos lugares
             case ITALIC:            restoreAnsi = RESET_ITALIC; break
             case UNDERLINE:         restoreAnsi = RESET_UNDERLINE; break
             case BLINK:             restoreAnsi = RESET_BLINK; break
@@ -67,7 +70,7 @@ class AnsiColors {
             return color(text, ansiValues[0])
 
         if(ansiValues.size()>1)
-            return  color( text, ansiValues.subList(1, ansiValues.size()) )
+            return  color( color(text, ansiValues[0]), ansiValues.subList(1, ansiValues.size()) )
     }
 
 	//método inutil, porém seu nome facilita a compreensão de como usar (?)
