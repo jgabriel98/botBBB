@@ -13,7 +13,7 @@ class CaptchaModule extends Module {
 				it.displayed &&
 				//!(it in fotosPerfis)  &&
 				it.properties.width / it.properties.height > 4	//verifica se a proporcao horizontal é pelo menos 5x maior em relacao a vertical
-			}
+			} as Navigator
 		}
 		subImagens { throw ExecutionControl.NotImplementedException }	//retorna uma lista ou algo iteravel, das 5 mini imagens, provavelmente as 5 regiões clicaveis da imagem. Aqui vai ser gambiarra pq eh dificil
 	}
