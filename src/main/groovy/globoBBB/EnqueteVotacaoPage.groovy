@@ -31,6 +31,9 @@ class EnqueteVotacaoPage extends Page {
 		votarNovamente { $('button', text: contains('Votar Novamente')) }
 	}
 
+	private static Random randomGenerator = new Random();
+
+
 	/**
 	 * vota no candidato com o nome informado
 	 * @param nome
@@ -94,17 +97,30 @@ class EnqueteVotacaoPage extends Page {
 	private int clicaNoCaptchaAteAcertar(){
 		int tentativas = 0
 		while(captcha.imagemInteira?.displayed){
-			clicaNoCaptcha()							//parece estar demorando clicar de novo quando erra o captcha, investigar isso
+			clicaNoCaptcha(randomGenerator.nextInt(5))						//parece estar demorando clicar de novo quando erra o captcha, investigar isso
 			captcha.esperaEscolhaSerProcessada()
 			tentativas++
 		}
 		return tentativas
 	}
 
-	private void clicaNoCaptcha() {
+	/**
+	 *
+	 * @param indice indice de qual imagem clicar, valores possiveis: [0,4]
+	 */
+	private void clicaNoCaptcha(int indice) {
 		waitToBeClickable(driver, captcha.imagemInteira.singleElement())
-		//println('escolhendo uma imagem qualquer no captcha')
-		captcha.imagemInteira.click()
+		print("\nescolhendo uma imagem de posicao $indice")
+		Map<String, ?> props = captcha.imagemInteira.properties
+
+		//quando é W3C os offset sao a partir do centro, quando não a partir do canto superior esquerdo
+		int xOffset = (props.width/5) * (indice-2)
+		int yOffset =  0
+		interact {
+			moveToElement(captcha.imagemInteira, xOffset, yOffset)
+			click()
+		}
+
 	}
 
 	private static void imprimeTempoRestante(Date inicio, int tempoLimite){
