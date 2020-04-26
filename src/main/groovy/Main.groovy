@@ -2,6 +2,8 @@ import geb.Browser
 import globoBBB.EnqueteVotacaoPage
 import globoBBB.GshowHomePage
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxOptions
 import org.openqa.selenium.remote.CapabilityType
@@ -13,6 +15,7 @@ import static utils.logging.WaitUtil.*
 class Main {
 	static void main(String[] args) {
 		configuraVariaveisDeAmbiente()
+		System.err.close()	//descomentar apenas para build de  produção
 
 		Map<String, Long> estatisticas = [tentativasFalhas: 0, tentativasSucedidas: 0]
 
@@ -27,7 +30,7 @@ class Main {
 
 		EnqueteVotacaoPage enquetePage = browser.page(EnqueteVotacaoPage)
 		while(true) {
-			estatisticas.tentativasFalhas += enquetePage.votaCandidato('Rafa') - 1
+			estatisticas.tentativasFalhas += enquetePage.votaCandidato('Thelma') - 1
 			estatisticas.tentativasSucedidas++
 			imprimeEstatisticas(estatisticas)
 
@@ -54,13 +57,15 @@ class Main {
 
 
 	static WebDriver configuraDriver() {
-		DesiredCapabilities caps = DesiredCapabilities.firefox()
-		//caps.setCapability(CapabilityType.BROWSER_NAME, "Firefox");
+		//def opt = new FirefoxOptions()
+		def opt = new ChromeOptions()
+		opt.setExperimentalOption("excludeSwitches", ["enable-automation"]);
+
 
 		//normal = complete, eager = interactive, none = none
-		caps.setCapability(CapabilityType.PAGE_LOAD_STRATEGY,"eager") // interactive
+		opt.setCapability(CapabilityType.PAGE_LOAD_STRATEGY,"none") // interactive
 
-		def opt = new FirefoxOptions(caps)
-		return new FirefoxDriver(opt)
+		//return new FirefoxDriver(opt)
+		return new ChromeDriver(opt)
 	}
 }
