@@ -1,6 +1,7 @@
 package globoBBB
 
 import geb.Page
+import utils.logging.WaitUtil
 
 class GshowHomePage extends Page{
 	static url = "realities/bbb/"
@@ -12,6 +13,7 @@ class GshowHomePage extends Page{
     }
 
 	void acessaPaginaVotacao(){
+		WaitUtil.waitToBeClickable(driver, enqueteVotacao.singleElement())
 		enqueteVotacao.click()
 	}
 

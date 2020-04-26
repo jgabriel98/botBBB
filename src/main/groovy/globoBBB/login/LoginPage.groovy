@@ -6,7 +6,7 @@ class LoginPage extends Page{
 	static at = { !base.empty }
 
 	static content = {
-		base { $('div.content #tpl-content') }
-		loginForm{ $('#login-form')}
+		base (wait: 2){ $('div.content #tpl-content') }
+		loginForm (wait:2){ $('#login-form')}
 	}
 }

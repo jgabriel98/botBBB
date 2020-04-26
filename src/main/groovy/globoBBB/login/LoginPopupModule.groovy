@@ -2,6 +2,7 @@ package globoBBB.login
 
 import geb.Module
 import geb.error.RequiredPageContentNotPresent
+import geb.waiting.WaitTimeoutException
 import jline.internal.Log
 
 class LoginPopupModule extends Module {
@@ -16,6 +17,8 @@ class LoginPopupModule extends Module {
 		try{
 			return browser.page(LoginPage).verifyAt()
 		}catch(Exception e){
+			return false
+		}catch(WaitTimeoutException e){
 			return false
 		}catch(RequiredPageContentNotPresent e){
 			return false

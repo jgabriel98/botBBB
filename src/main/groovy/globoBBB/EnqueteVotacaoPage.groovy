@@ -3,11 +3,15 @@ package globoBBB
 import geb.Page
 import geb.error.RequiredPageContentNotPresent
 import geb.navigator.Navigator
-import globoBBB.login.LoginPage
 import globoBBB.login.LoginPopupModule
 import groovy.time.TimeCategory
+import org.openqa.selenium.By
 import org.openqa.selenium.WebDriverException
+import org.openqa.selenium.support.ui.ExpectedConditions
+import org.openqa.selenium.support.ui.WebDriverWait
+import utils.logging.AnsiCodes
 
+import static utils.logging.WaitUtil.*
 import static utils.logging.AnsiColors.*
 
 
@@ -17,30 +21,38 @@ class EnqueteVotacaoPage extends Page {
 
 	static content = {
 		loginPopup { module(LoginPopupModule) as LoginPopupModule}
-		quadroCandidatos { $('#banner_slb_topo ~ div').findAll { it.text().trim().contains('\n') } }
+		quadroCandidatos(wait: true) { $('#banner_slb_topo ~ div').findAll { it.text().trim().contains('\n') } }
 		listaNomeCandidatos { quadroCandidatos.text().split('\n') }
 		candidato { String nomeCandidato ->
 			quadroCandidatos.children()
 					.find { it.text().trim().toLowerCase() == nomeCandidato.trim().toLowerCase() } as Navigator
 		}
-		//captcha {  }
+		captcha { module(CaptchaModule) as CaptchaModule }
 		votarNovamente { $('button', text: contains('Votar Novamente')) }
 	}
 
-	void votaCandidato(String nome) {
+	/**
+	 * vota no candidato com o nome informado
+	 * @param nome
+	 * @return quantidade de tentativas feitas para votar no candidato
+	 */
+	int votaCandidato(String nome) {
 		Navigator target = candidato(nome)
 
 		boolean estaAutenticado = false
+		boolean precisouAutenticar
 		while(!estaAutenticado){
-			target.click()
-			//isso funciona pq se tiver autenticado o método vai retornar que nao pediu pra fazer login. todo: alterar para algo que verifique forma melhor se está autenticado ou nao
-			estaAutenticado = !pedeParaFazerLoginSePrecisar()
+			waitFor{ target.click() }
+			precisouAutenticar = pedeParaFazerLoginSePrecisar() //isso funciona pq se tiver autenticado o método vai retornar que nao pediu pra fazer login. todo: alterar para algo que verifique forma melhor se está autenticado ou nao
+			estaAutenticado = captcha.imagemInteira as Boolean
 		}
 
-		println color('Autenticado(a) com sucesso!', LIGHT_GREEN)
-		println('o bot irá prosseguir normalmente, não será necessário fazer login novamente.')
+		if(precisouAutenticar) {
+			println color('Autenticado(a) no sistema', LIGHT_GREEN)
+			println('o bot irá prosseguir normalmente, não será necessário fazer login novamente até que a sessao expire')
+		}
 
-		escolheImageDoCaptcha()
+		return clicaNoCaptchaAteAcertar()
 	}
 
 	/**
@@ -75,16 +87,35 @@ class EnqueteVotacaoPage extends Page {
 		}
 	}
 
-	private escolheImageDoCaptcha() {
+	/**
+	 * continua clicando no captcha até aceitar o voto
+	 * @return quantidade de tentativas
+	 */
+	private int clicaNoCaptchaAteAcertar(){
+		int tentativas = 0
+		while(captcha.imagemInteira?.displayed){
+			clicaNoCaptcha()							//parece estar demorando clicar de novo quando erra o captcha, investigar isso
+			captcha.esperaEscolhaSerProcessada()
+			tentativas++
+		}
+		return tentativas
+	}
 
+	private void clicaNoCaptcha() {
+		waitToBeClickable(driver, captcha.imagemInteira.singleElement())
+		//println('escolhendo uma imagem qualquer no captcha')
+		captcha.imagemInteira.click()
 	}
 
 	private static void imprimeTempoRestante(Date inicio, int tempoLimite){
 		int segundosPassados = TimeCategory.minus(new Date(), inicio).seconds
-		print '\t\rTempo restante:' + color( tempoLimite-segundosPassados as String, BOLD) + color('s', ITALIC)
+		print '\rTempo restante:' + color( tempoLimite-segundosPassados as String, BOLD) + color('s', ITALIC) + AnsiCodes.CLEAR_LINE_RIGHT
 		System.out.flush()
 	}
 
+	/**
+	 * @return se os o popup de login está aberto, estando dentro dele ou não
+	 */
 	private boolean loginPopupEstaAberto() {
 		try {
 			return loginPopup.isInsideIt() ?: loginPopup.popUpContainer.displayed
