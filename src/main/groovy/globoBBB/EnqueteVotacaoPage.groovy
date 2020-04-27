@@ -5,10 +5,7 @@ import geb.error.RequiredPageContentNotPresent
 import geb.navigator.Navigator
 import globoBBB.login.LoginPopupModule
 import groovy.time.TimeCategory
-import org.openqa.selenium.By
 import org.openqa.selenium.WebDriverException
-import org.openqa.selenium.support.ui.ExpectedConditions
-import org.openqa.selenium.support.ui.WebDriverWait
 import utils.logging.AnsiCodes
 
 import static utils.logging.WaitUtil.*

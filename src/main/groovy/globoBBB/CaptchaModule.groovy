@@ -3,7 +3,6 @@ package globoBBB
 import geb.Module
 import geb.navigator.Navigator
 import geb.waiting.WaitTimeoutException
-import jdk.jshell.spi.ExecutionControl
 
 class CaptchaModule extends Module {
 	static content = {
