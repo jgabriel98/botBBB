@@ -50,8 +50,10 @@ class Main {
 
 	static void configuraVariaveisDeAmbiente() {
 		//escreve apenas se n ja for definida
-		System.setProperty( "webdriver.gecko.driver",  System.getProperty("webdriver.gecko.driver")  ?: "../resources/geckodriver"  )
-		System.setProperty( "webdriver.chrome.driver", System.getProperty("webdriver.chrome.driver") ?: "../resources/chromedriver" )
+		//System.setProperty( "webdriver.gecko.driver",  System.getProperty("webdriver.gecko.driver")  ?: "../resources/geckodriver"  )
+		System.setProperty( "webdriver.gecko.driver",  System.getProperty("webdriver.gecko.driver")  ?: "../resources/main/geckodriver"  )
+		//System.setProperty( "webdriver.chrome.driver", System.getProperty("webdriver.chrome.driver") ?: "../resources/chromedriver" )
+		System.setProperty( "webdriver.chrome.driver", System.getProperty("webdriver.chrome.driver") ?: "../resources/main/chromedriver" )
 	}
 
 
